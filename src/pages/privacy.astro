@@ -1,0 +1,71 @@
+---
+import Base from '../layouts/Base.astro';
+const updated = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+<Base
+  title="Privacy Policy | txttocsv"
+  description="How txttocsv handles data. Files are processed in your browser and never uploaded. Read how cookies, analytics and third-party advertising such as Google AdSense are used."
+  noindex={false}
+>
+  <article class="wrap section article">
+    <nav class="breadcrumb"><a href="/">Home</a> / <span>Privacy</span></nav>
+    <h1>Privacy policy</h1>
+    <p class="meta">Last updated on {updated}</p>
+
+    <h2>The short version</h2>
+    <p>
+      The files you convert on this site are processed entirely in your browser. They are never uploaded
+      to, seen by, or stored on our servers. We do use cookies and third-party services for analytics and
+      advertising, described below.
+    </p>
+
+    <h2>Files and conversions</h2>
+    <p>
+      The TXT and CSV converters run as JavaScript on your device. The text you paste or the file you drop
+      in stays local. We have no access to it and keep no copy of it.
+    </p>
+
+    <h2>Cookies and advertising</h2>
+    <p>
+      This site displays ads served by Google AdSense. Third-party vendors, including Google, use cookies
+      to serve ads based on your prior visits to this and other websites.
+    </p>
+    <ul>
+      <li>Google's use of advertising cookies enables it and its partners to serve ads to you based on your visits to this and other sites.</li>
+      <li>You can opt out of personalised advertising by visiting <a href="https://www.google.com/settings/ads" rel="nofollow noopener" target="_blank">Google Ads Settings</a>.</li>
+      <li>You can review Google's advertising practices in the <a href="https://policies.google.com/technologies/partner-sites" rel="nofollow noopener" target="_blank">Google Privacy &amp; Terms</a>.</li>
+      <li>For opting out of third-party vendor cookies, see <a href="https://www.aboutads.info/choices/" rel="nofollow noopener" target="_blank">aboutads.info/choices</a>.</li>
+    </ul>
+
+    <h2>Analytics</h2>
+    <p>
+      We use privacy-focused analytics to understand which pages are useful. This records aggregate,
+      non-identifying information such as page views and referring sites.
+      <em>(Confirm your chosen provider here, for example Plausible or Google Analytics 4, and list it.)</em>
+    </p>
+
+    <h2>Third-party services we rely on</h2>
+    <ul>
+      <li>Google AdSense: advertising.</li>
+      <li>Your analytics provider: aggregate traffic measurement.</li>
+      <li>Your hosting provider (for example Vercel or Cloudflare Pages): serving the website.</li>
+    </ul>
+
+    <h2>Your rights</h2>
+    <p>
+      Depending on where you live, you may have the right to access, correct, or request deletion of any
+      personal data a service holds about you, and to object to personalised advertising. Because we do not
+      collect personal data directly, most requests should be directed to the relevant third party above.
+      For anything else, contact <a href="mailto:info@txttocsv.com">info@txttocsv.com</a>.
+    </p>
+
+    <h2>Consent</h2>
+    <p>
+      If you are in a region that requires it, a consent banner will ask permission before non-essential
+      cookies are set. You can withdraw consent at any time through your browser settings.
+    </p>
+
+    <p class="muted"><em>This template covers the essentials required for advertising and analytics.
+    Have it reviewed against the exact laws of your operating jurisdiction before launch.</em></p>
+  </article>
+</Base>

@@ -1,0 +1,59 @@
+---
+import Base from '../layouts/Base.astro';
+const site = 'https://txttocsv.com';
+// TODO before launch: replace author name, bio and sameAs profiles with real details.
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  mainEntity: {
+    '@type': 'Person',
+    name: 'Hamza Younis',
+    url: `${site}/about`,
+    email: 'info@txttocsv.com',
+    sameAs: [], // add real X / LinkedIn / GitHub URLs
+  },
+};
+---
+<Base
+  title="About txttocsv: Who Builds and Maintains This Tool"
+  description="txttocsv is a free, privacy-first converter for text and CSV files. Learn who builds it, why it exists, and how conversions are kept accurate and local."
+  schema={schema}
+>
+  <article class="wrap section article">
+    <nav class="breadcrumb"><a href="/">Home</a> / <span>About</span></nav>
+    <h1>About txttocsv</h1>
+    <p class="lead">A small, focused tool that does one job well: converting between plain text and CSV without mangling your data.</p>
+
+    <h2>Why this exists</h2>
+    <p>
+      Most text-to-CSV conversions fail on the same small things. A value with a comma splits a row.
+      A tab file gets read as commas. Accented characters turn to symbols in Excel. Many online
+      converters also upload your file to a server, which is a problem when the data is not yours to share.
+      txttocsv was built to fix all of that: correct quoting, reliable delimiter handling, and processing
+      that happens entirely in your browser.
+    </p>
+
+    <h2>Who builds it</h2>
+    <p>
+      This site is built and maintained by Hamza Younis, a developer who works with data exports and
+      import pipelines. The converter and every guide on the site come from hands-on use of these
+      formats, not from rewritten documentation.
+      <em>(Replace this paragraph with your real name, background and a photo before launch. Add your
+      X, LinkedIn or GitHub links to the author schema so search engines can verify authorship.)</em>
+    </p>
+
+    <h2>How we keep it accurate</h2>
+    <p>
+      Every method described in a guide is tested before it is published. Conversion behaviour follows
+      the CSV specification, RFC 4180, so results match what Excel, Google Sheets, pandas and databases
+      expect. Our full editorial approach is on the <a href="/methodology">editorial policy</a> page.
+    </p>
+
+    <h2>Contact</h2>
+    <p>
+      Questions, corrections or feature requests are welcome at
+      <a href="mailto:info@txttocsv.com">info@txttocsv.com</a>, or through the
+      <a href="/contact">contact page</a>.
+    </p>
+  </article>
+</Base>

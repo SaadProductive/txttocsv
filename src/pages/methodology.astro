@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base
+  title="Editorial Policy and How We Test | txttocsv"
+  description="How txttocsv researches, tests and updates its conversion guides and tools. Our sourcing standards, accuracy checks, correction policy and use of the RFC 4180 standard."
+>
+  <article class="wrap section article">
+    <nav class="breadcrumb"><a href="/">Home</a> / <span>Editorial policy</span></nav>
+    <h1>Editorial policy and testing</h1>
+    <p class="lead">What we publish is tested, sourced and dated. Here is exactly how.</p>
+
+    <h2>Testing</h2>
+    <p>
+      Every conversion method we describe is run on real sample files before it goes live. When a guide
+      shows a Python, PowerShell or Excel step, that step was executed and produced the stated result.
+      If a method has a caveat, such as Excel dropping leading zeros, we state it plainly.
+    </p>
+
+    <h2>Sourcing</h2>
+    <p>
+      Format behaviour is checked against primary sources: the CSV specification RFC 4180, the pandas
+      documentation, and Microsoft and Google support pages for their respective tools. We link to these
+      sources directly so you can verify anything yourself.
+    </p>
+
+    <h2>The tool itself</h2>
+    <p>
+      The converter runs client-side in JavaScript. It quotes fields per RFC 4180, detects common
+      delimiters, and exports UTF-8. No file is transmitted to a server, so we never see, store or log
+      your data.
+    </p>
+
+    <h2>Updates and corrections</h2>
+    <p>
+      Each guide shows an "Updated on" date reflecting its last real revision. We do not backdate or
+      fake freshness. If you spot an error, email <a href="mailto:info@txttocsv.com">info@txttocsv.com</a>
+      and we will correct it and note the change.
+    </p>
+
+    <h2>Independence</h2>
+    <p>
+      The site is supported by advertising. Ads never influence which methods we recommend, and we do not
+      accept payment for placement or reviews.
+    </p>
+  </article>
+</Base>

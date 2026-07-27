@@ -1,0 +1,276 @@
+---
+// Reusable, fully client-side converter. No upload, no dependency.
+export interface Props { defaultDir?: 'txt2csv' | 'csv2txt'; }
+const { defaultDir = 'txt2csv' } = Astro.props;
+---
+<div class="tool" id="tool" data-default-dir={defaultDir}>
+  <div class="tool-bar">
+    <div class="dir" aria-live="polite">
+      <span class="tag" data-tag-from>TXT</span>
+      <button class="swap" data-swap title="Swap direction" aria-label="Swap conversion direction">&#8646;</button>
+      <span class="tag on" data-tag-to>CSV</span>
+    </div>
+
+    <span class="ctrl" data-only="txt2csv">
+      <label for="inDelim">Input separator</label>
+      <select id="inDelim">
+        <option value="auto">Auto-detect</option>
+        <option value="\t">Tab</option>
+        <option value=",">Comma</option>
+        <option value=";">Semicolon</option>
+        <option value="|">Pipe</option>
+        <option value=" ">Space</option>
+        <option value="ws">Whitespace (2+)</option>
+        <option value="custom">Custom…</option>
+      </select>
+      <input type="text" id="inCustom" maxlength="4" placeholder="?" hidden aria-label="Custom separator" />
+    </span>
+
+    <span class="ctrl" data-only="csv2txt">
+      <label for="outDelim">Output separator</label>
+      <select id="outDelim">
+        <option value="\t">Tab</option>
+        <option value=",">Comma</option>
+        <option value=";">Semicolon</option>
+        <option value="|">Pipe</option>
+        <option value=" ">Space</option>
+        <option value="custom">Custom…</option>
+      </select>
+      <input type="text" id="outCustom" maxlength="4" placeholder="?" hidden aria-label="Custom output separator" />
+    </span>
+
+    <label class="ctrl chk"><input type="checkbox" id="hasHeader" checked /> Header row</label>
+    <label class="ctrl chk"><input type="checkbox" id="trimWs" /> Trim spaces</label>
+    <span class="ctrl">
+      <label for="lineEnd">Line ending</label>
+      <select id="lineEnd">
+        <option value="\r\n">CRLF (Excel)</option>
+        <option value="\n">LF (Unix)</option>
+      </select>
+    </span>
+  </div>
+
+  <div class="panes">
+    <div class="pane">
+      <div class="pane-head">
+        <span data-in-label>Paste text</span>
+        <button class="swap" data-clear title="Clear" aria-label="Clear input" style="width:auto;padding:0 .5rem">Clear</button>
+      </div>
+      <textarea class="io" id="input" spellcheck="false" aria-label="Input text"
+        placeholder="name  age  city&#10;Ada  36  London&#10;Alan  41  Manchester"></textarea>
+      <div class="drop" data-drop tabindex="0" role="button" aria-label="Upload a file">
+        Drop a .txt or .csv file here, or click to browse
+        <input type="file" accept=".txt,.csv,.tsv,text/plain" hidden data-file />
+      </div>
+    </div>
+
+    <div class="pane">
+      <div class="pane-head">
+        <span data-out-label>CSV preview</span>
+        <span class="muted" data-dims></span>
+      </div>
+      <div class="preview" id="preview" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div class="tool-foot">
+    <span class="status" id="status">Ready. Everything runs in your browser.</span>
+    <div class="tool-actions">
+      <button class="btn btn-ghost" data-copy>Copy output</button>
+      <button class="btn btn-primary" data-download disabled>Download</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ---------- CSV core (RFC 4180 aware) ----------
+  function parseCSV(text) {
+    const rows = []; let row = []; let field = ''; let i = 0; let q = false;
+    const n = text.length;
+    while (i < n) {
+      const c = text[i];
+      if (q) {
+        if (c === '"') { if (text[i + 1] === '"') { field += '"'; i += 2; continue; } q = false; i++; continue; }
+        field += c; i++; continue;
+      }
+      if (c === '"') { q = true; i++; continue; }
+      if (c === ',') { row.push(field); field = ''; i++; continue; }
+      if (c === '\r') { i++; continue; }
+      if (c === '\n') { row.push(field); rows.push(row); row = []; field = ''; i++; continue; }
+      field += c; i++;
+    }
+    row.push(field); rows.push(row);
+    // drop a trailing empty row
+    if (rows.length && rows[rows.length - 1].length === 1 && rows[rows.length - 1][0] === '') rows.pop();
+    return rows;
+  }
+
+  function toCSV(rows, eol) {
+    const esc = (v) => {
+      const s = String(v);
+      return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+    };
+    return rows.map((r) => r.map(esc).join(',')).join(eol);
+  }
+
+  function detectDelim(text) {
+    const line = (text.split(/\r?\n/).find((l) => l.trim().length) || '');
+    const cands = [['\t', /\t/g], [';', /;/g], [',', /,/g], ['|', /\|/g]];
+    let best = null, max = 0;
+    for (const [d, re] of cands) { const c = (line.match(re) || []).length; if (c > max) { max = c; best = d; } }
+    if (best) return best;
+    if (/\S {2,}\S/.test(line)) return 'ws';
+    if (/\S \S/.test(line)) return ' ';
+    return ',';
+  }
+
+  function splitText(text, delim, trim) {
+    const lines = text.replace(/\r\n?/g, '\n').split('\n');
+    while (lines.length && lines[lines.length - 1] === '') lines.pop();
+    return lines.map((line) => {
+      let parts;
+      if (delim === 'ws') parts = line.split(/\s{2,}|\t/);
+      else parts = line.split(delim);
+      return trim ? parts.map((p) => p.trim()) : parts;
+    });
+  }
+
+  // ---------- wiring ----------
+  const $ = (s) => document.querySelector(s);
+  const tool = $('#tool');
+  let dir = tool.dataset.defaultDir || 'txt2csv';
+
+  const input = $('#input'), preview = $('#preview'), status = $('#status');
+  const dims = tool.querySelector('[data-dims]');
+  const inLabel = tool.querySelector('[data-in-label]');
+  const outLabel = tool.querySelector('[data-out-label]');
+  const tagFrom = tool.querySelector('[data-tag-from]');
+  const tagTo = tool.querySelector('[data-tag-to]');
+  const dlBtn = tool.querySelector('[data-download]');
+  let lastOutput = '';
+
+  function activeControls() {
+    tool.querySelectorAll('[data-only]').forEach((el) => {
+      el.style.display = el.dataset.only === dir ? '' : 'none';
+    });
+  }
+  function labels() {
+    const t2c = dir === 'txt2csv';
+    tagFrom.textContent = t2c ? 'TXT' : 'CSV';
+    tagTo.textContent = t2c ? 'CSV' : 'TXT';
+    inLabel.textContent = t2c ? 'Paste text' : 'Paste CSV';
+    outLabel.textContent = t2c ? 'CSV preview' : 'TXT preview';
+  }
+  function customVal(sel, cust) {
+    let v = $(sel).value;
+    if (v === 'custom') return $(cust).value || ',';
+    return v.replace('\\t', '\t');
+  }
+
+  function render() {
+    const raw = input.value;
+    if (!raw.trim()) {
+      preview.innerHTML = '<p class="out muted">Output appears here.</p>';
+      status.textContent = 'Ready. Everything runs in your browser.'; status.className = 'status';
+      dims.textContent = ''; dlBtn.disabled = true; lastOutput = ''; return;
+    }
+    const trim = $('#trimWs').checked;
+    const header = $('#hasHeader').checked;
+    const eol = $('#lineEnd').value.replace('\\r\\n', '\r\n').replace('\\n', '\n');
+    try {
+      let rows, out;
+      if (dir === 'txt2csv') {
+        let d = $('#inDelim').value;
+        if (d === 'auto') d = detectDelim(raw);
+        else if (d === 'custom') d = ($('#inCustom').value || ',');
+        else d = d.replace('\\t', '\t');
+        rows = splitText(raw, d, trim);
+        out = toCSV(rows, eol);
+      } else {
+        rows = parseCSV(raw);
+        if (trim) rows = rows.map((r) => r.map((c) => c.trim()));
+        const od = customVal('#outDelim', '#outCustom');
+        out = rows.map((r) => r.join(od)).join(eol);
+      }
+      lastOutput = out;
+      // preview as table
+      const cols = Math.max(...rows.map((r) => r.length));
+      let html = '<table><tbody>';
+      rows.slice(0, 200).forEach((r, ri) => {
+        const cell = (header && ri === 0) ? 'th' : 'td';
+        html += '<tr>';
+        for (let c = 0; c < cols; c++) html += `<${cell}>${escapeHtml(r[c] ?? '')}</${cell}>`;
+        html += '</tr>';
+      });
+      html += '</tbody></table>';
+      preview.innerHTML = html;
+      dims.textContent = `${rows.length} rows × ${cols} cols`;
+      status.textContent = `Converted ${rows.length} rows.`; status.className = 'status ok';
+      dlBtn.disabled = false;
+    } catch (e) {
+      preview.innerHTML = '';
+      status.textContent = 'Could not parse the input. Check the separator and quoting.';
+      status.className = 'status err'; dlBtn.disabled = true; lastOutput = '';
+    }
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"]/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m]));
+  }
+
+  // events
+  input.addEventListener('input', render);
+  tool.querySelectorAll('select, input[type=checkbox], #inCustom, #outCustom').forEach((el) =>
+    el.addEventListener('input', render));
+  $('#inDelim')?.addEventListener('change', (e) => {
+    $('#inCustom').hidden = e.target.value !== 'custom';
+  });
+  $('#outDelim')?.addEventListener('change', (e) => {
+    $('#outCustom').hidden = e.target.value !== 'custom';
+  });
+
+  tool.querySelector('[data-swap]').addEventListener('click', () => {
+    dir = dir === 'txt2csv' ? 'csv2txt' : 'txt2csv';
+    tagTo.classList.add('on');
+    activeControls(); labels(); render();
+  });
+  tool.querySelector('[data-clear]').addEventListener('click', () => { input.value = ''; render(); input.focus(); });
+
+  tool.querySelector('[data-copy]').addEventListener('click', async () => {
+    if (!lastOutput) return;
+    try { await navigator.clipboard.writeText(lastOutput); status.textContent = 'Output copied to clipboard.'; status.className = 'status ok'; }
+    catch { status.textContent = 'Copy failed. Select the text manually.'; status.className = 'status err'; }
+  });
+
+  dlBtn.addEventListener('click', () => {
+    if (!lastOutput) return;
+    const ext = dir === 'txt2csv' ? 'csv' : 'txt';
+    const mime = dir === 'txt2csv' ? 'text/csv' : 'text/plain';
+    const blob = new Blob(['\ufeff' + lastOutput], { type: mime + ';charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'converted.' + ext; a.click();
+    URL.revokeObjectURL(url);
+    status.textContent = `Downloaded converted.${ext} (UTF-8 with BOM).`; status.className = 'status ok';
+  });
+
+  // file drop
+  const drop = tool.querySelector('[data-drop]');
+  const file = tool.querySelector('[data-file]');
+  const readFile = (f) => {
+    if (!f) return;
+    if (f.size > 8 * 1024 * 1024) { status.textContent = 'File is over 8 MB. Try a smaller file.'; status.className = 'status err'; return; }
+    const r = new FileReader();
+    r.onload = () => { input.value = String(r.result || ''); if (/\.csv$/i.test(f.name) && dir === 'txt2csv') { /* keep dir */ } render(); };
+    r.readAsText(f, 'UTF-8');
+  };
+  drop.addEventListener('click', () => file.click());
+  drop.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); file.click(); } });
+  file.addEventListener('change', () => readFile(file.files[0]));
+  ['dragover', 'dragenter'].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add('hot'); }));
+  ['dragleave', 'drop'].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove('hot'); }));
+  drop.addEventListener('drop', (e) => readFile(e.dataTransfer.files[0]));
+
+  // init
+  activeControls(); labels(); render();
+</script>

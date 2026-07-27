@@ -1,0 +1,92 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Faq from '../../components/Faq.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+const d = post.data;
+const site = 'https://txttocsv.com';
+const url = `${site}/blog/${post.slug}`;
+const person = {
+  '@type': 'Person',
+  name: d.author,
+  url: `${site}/about`,
+  // TODO: replace with the real author's public profiles before launch.
+  sameAs: [],
+};
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: d.title,
+    description: d.description,
+    datePublished: d.published,
+    dateModified: d.updated,
+    author: person,
+    publisher: {
+      '@type': 'Organization',
+      name: 'txttocsv',
+      url: site,
+      logo: { '@type': 'ImageObject', url: `${site}/favicon.svg` },
+    },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+    inLanguage: 'en-US',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: site },
+      { '@type': 'ListItem', position: 2, name: 'Guides', item: `${site}/blog` },
+      { '@type': 'ListItem', position: 3, name: d.title, item: url },
+    ],
+  },
+];
+if (d.faq.length) {
+  schema.push({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: d.faq.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a.replace(/<[^>]+>/g, '') },
+    })),
+  });
+}
+
+const fmt = (s: string) =>
+  new Date(s).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+<Base title={d.metaTitle} description={d.description} type="article" schema={schema}>
+  <article class="wrap section article">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> / <a href="/blog">Guides</a> / <span>{d.title}</span>
+    </nav>
+    <p class="eyebrow">{d.intent} guide</p>
+    <h1>{d.title}</h1>
+    <div class="meta">
+      <span class="byline">By {d.author}</span>
+      <span>Updated on {fmt(d.updated)}</span>
+    </div>
+
+    <Content />
+
+    {d.faq.length > 0 && <Faq items={d.faq} />}
+
+    {d.related.length > 0 && (
+      <div class="related">
+        <h2>Related guides</h2>
+        <ul>
+          {d.related.map((r) => <li><a href={r.href}>{r.label}</a></li>)}
+        </ul>
+      </div>
+    )}
+  </article>
+</Base>

@@ -1,0 +1,74 @@
+---
+import Base from '../layouts/Base.astro';
+import Converter from '../components/Converter.astro';
+import Faq from '../components/Faq.astro';
+
+const site = 'https://txttocsv.com';
+const faq = [
+  { q: 'How do I convert CSV to TXT?', a: 'Paste your CSV above, choose the output separator you want in the text file (tab is the default), then download. The tool parses quoted fields correctly and rejoins each row with your chosen delimiter.' },
+  { q: 'Can I convert CSV to a tab-delimited TXT file?', a: 'Yes. Leave the output separator on Tab. This produces a TSV-style text file that pastes cleanly into spreadsheets and many legacy systems.' },
+  { q: 'Will quoted commas be handled correctly?', a: 'Yes. The parser follows RFC 4180, so a field like "Smith, John" is read as one value and not split on the internal comma.' },
+  { q: 'Does the CSV to TXT conversion happen online?', a: 'The processing runs entirely in your browser. Your CSV is never uploaded to a server, which keeps the data private.' },
+];
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'CSV to TXT Converter',
+    url: `${site}/csv-to-txt`,
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'Any',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: site },
+      { '@type': 'ListItem', position: 2, name: 'CSV to TXT', item: `${site}/csv-to-txt` },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  },
+];
+---
+<Base
+  title="CSV to TXT Converter: Free Online, No Upload | txttocsv"
+  description="Convert CSV to TXT free in your browser. Rejoin columns with tabs, spaces or any delimiter, with correct quoted-field parsing. No sign-up, nothing uploaded."
+  schema={schema}
+>
+  <section class="hero wrap">
+    <nav class="breadcrumb"><a href="/">Home</a> / <span>CSV to TXT</span></nav>
+    <p class="eyebrow">CSV &rsaquo; Text, in your browser</p>
+    <h1>Convert CSV to TXT online</h1>
+    <p class="lead">
+      Turn a comma file back into plain text. Choose tab, space or a custom separator,
+      keep quoted values intact, and download. Everything runs locally.
+    </p>
+    <span class="trust-line">&#9679; Runs on your device. Your file is never uploaded.</span>
+    <Converter defaultDir="csv2txt" />
+    <div class="ad-slot" style="min-height:90px;margin-top:1.5rem" aria-hidden="true"></div>
+  </section>
+
+  <section class="section wrap" style="max-width:820px">
+    <h2>When do you need CSV to TXT?</h2>
+    <p>
+      Plenty of systems expect tab-delimited text rather than comma files: older import tools,
+      some banking uploads, and pipelines that treat a comma as data rather than a separator.
+      Converting CSV to a TXT file lets you swap the delimiter to something that will not clash
+      with the values inside your columns.
+    </p>
+    <p>
+      This converter reads your CSV using the same quoting rules Excel and databases use, so a field
+      such as <code>"Smith, John"</code> stays whole. It then rejoins each row with the separator you
+      pick. For the reverse task, the <a href="/">TXT to CSV converter</a> on the home page turns
+      delimited text back into a clean CSV, and the
+      <a href="/blog/how-to-convert-txt-to-csv">conversion guide</a> covers both directions in detail.
+    </p>
+  </section>
+
+  <div class="wrap"><Faq items={faq} /></div>
+</Base>

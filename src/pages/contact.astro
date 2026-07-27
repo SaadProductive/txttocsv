@@ -1,0 +1,51 @@
+---
+import Base from '../layouts/Base.astro';
+const site = 'https://txttocsv.com';
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  url: `${site}/contact`,
+  mainEntity: {
+    '@type': 'Organization',
+    name: 'txttocsv',
+    email: 'info@txttocsv.com',
+    contactPoint: {
+      '@type': 'ContactPoint',
+      email: 'info@txttocsv.com',
+      contactType: 'customer support',
+      availableLanguage: ['English'],
+    },
+  },
+};
+---
+<Base
+  title="Contact txttocsv: Questions, Feedback, Corrections"
+  description="Get in touch with the txttocsv team. Send questions, feature requests, bug reports or corrections about our TXT and CSV conversion tools and guides."
+  schema={schema}
+>
+  <article class="wrap section article">
+    <nav class="breadcrumb"><a href="/">Home</a> / <span>Contact</span></nav>
+    <h1>Contact</h1>
+    <p class="lead">Questions, corrections and feature requests are all welcome.</p>
+
+    <p>
+      The fastest way to reach us is email. We read every message and reply to most within a few working days.
+    </p>
+
+    <div class="cta-band" style="text-align:left">
+      <h3 style="margin-top:0">Email</h3>
+      <p><a href="mailto:info@txttocsv.com" class="btn btn-primary">info@txttocsv.com</a></p>
+      <p class="muted" style="margin-bottom:0">
+        Reporting a conversion bug? Include a small sample of the input text and the separator you used,
+        and we can reproduce it quickly. Please do not send confidential or personal data.
+      </p>
+    </div>
+
+    <h2>Common questions</h2>
+    <p>
+      Many answers are already on the site. For how the tool works, see the
+      <a href="/blog/how-to-convert-txt-to-csv">conversion guide</a>. For privacy and data handling,
+      see the <a href="/privacy">privacy policy</a>.
+    </p>
+  </article>
+</Base>

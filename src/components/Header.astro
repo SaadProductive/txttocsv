@@ -1,0 +1,32 @@
+---
+const links = [
+  { href: '/#tool', label: 'Converter' },
+  { href: '/csv-to-txt', label: 'CSV to TXT' },
+  { href: '/blog', label: 'Guides' },
+  { href: '/about', label: 'About' },
+  { href: '/contact', label: 'Contact' },
+];
+---
+<header class="site-header">
+  <div class="wrap">
+    <a href="/" class="brand" aria-label="txttocsv home">
+      txt<span class="arw">&rsaquo;</span><span class="cell">csv</span>
+    </a>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" data-nav-toggle>
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#0E1B2A" stroke-width="2">
+        <path d="M3 5h14M3 10h14M3 15h14" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <nav class="nav" data-nav>
+      {links.map((l) => <a href={l.href}>{l.label}</a>)}
+    </nav>
+  </div>
+</header>
+<script>
+  const btn = document.querySelector('[data-nav-toggle]');
+  const nav = document.querySelector('[data-nav]');
+  btn?.addEventListener('click', () => {
+    const open = nav?.classList.toggle('open');
+    btn.setAttribute('aria-expanded', String(!!open));
+  });
+</script>
