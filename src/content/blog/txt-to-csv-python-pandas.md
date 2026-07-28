@@ -6,7 +6,7 @@ keyword: "convert txt to csv python"
 intent: "Informational"
 published: "2026-07-28"
 updated: "2026-07-28"
-author: "Hamza Younis"
+author: "Saad Zaman"
 faq:
   - q: "How do I convert a TXT file to CSV in pandas?"
     a: "Read the file with pandas.read_csv, setting the sep argument to your source delimiter, then write it out with DataFrame.to_csv and index=False. pandas handles the quoting rules automatically, so values containing commas are wrapped correctly."

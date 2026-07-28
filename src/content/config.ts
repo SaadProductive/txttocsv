@@ -10,7 +10,7 @@ const blog = defineCollection({
     intent: z.enum(['Informational', 'Commercial', 'Transactional']).default('Informational'),
     published: z.string(),        // ISO date
     updated: z.string(),          // ISO date
-    author: z.string().default('Hamza Younis'),
+    author: z.string().default('Saad Zaman'),
     faq: z.array(z.object({ q: z.string(), a: z.string() })).default([]),
     related: z.array(z.object({ href: z.string(), label: z.string() })).default([]),
   }),

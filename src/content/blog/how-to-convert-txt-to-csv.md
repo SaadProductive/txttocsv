@@ -6,7 +6,7 @@ keyword: "how to convert txt to csv"
 intent: "Informational"
 published: "2026-07-27"
 updated: "2026-07-27"
-author: "Hamza Younis"
+author: "Saad Zaman"
 faq:
   - q: "Can I just rename a .txt file to .csv?"
     a: "Sometimes, but only if the text already uses commas as separators and quotes any value that contains a comma. Renaming changes the extension, not the structure. If your file is tab or space separated, renaming it produces a single-column CSV that every spreadsheet will misread."

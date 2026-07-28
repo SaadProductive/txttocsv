@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FBFCFE"/>
+      <stop offset="1" stop-color="#F2F6FC"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#DDE6F0" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#grid)" opacity="0.7"/>
+
+  <!-- brand mark -->
+  <g transform="translate(80,72)">
+    <text x="0" y="0" font-family="'JetBrains Mono','DejaVu Sans Mono',monospace" font-size="34" font-weight="700" fill="#0E1B2A">txt</text>
+    <text x="66" y="0" font-family="'JetBrains Mono','DejaVu Sans Mono',monospace" font-size="34" font-weight="700" fill="#7C8AA0">&#8250;</text>
+    <rect x="92" y="-30" width="86" height="44" rx="6" fill="#FFFFFF" stroke="#1F6FEB" stroke-width="2.5"/>
+    <text x="104" y="0" font-family="'JetBrains Mono','DejaVu Sans Mono',monospace" font-size="34" font-weight="700" fill="#0B4FC0">csv</text>
+  </g>
+
+  <!-- headline -->
+  <text x="80" y="250" font-family="'DejaVu Sans','Arial',sans-serif" font-size="76" font-weight="700" fill="#0E1B2A" letter-spacing="-2">Convert TXT to CSV</text>
+  <text x="80" y="330" font-family="'DejaVu Sans','Arial',sans-serif" font-size="76" font-weight="700" fill="#0E1B2A" letter-spacing="-2">without breaking columns</text>
+
+  <!-- subline -->
+  <text x="82" y="392" font-family="'DejaVu Sans','Arial',sans-serif" font-size="30" fill="#43526A">Free, fast, and private. Everything runs in your browser.</text>
+
+  <!-- transformation visual: raw text -> grid -->
+  <g transform="translate(80,450)" font-family="'JetBrains Mono','DejaVu Sans Mono',monospace" font-size="22">
+    <rect x="0" y="0" width="300" height="120" rx="8" fill="#FFFFFF" stroke="#C4D2E6" stroke-width="1.5"/>
+    <text x="20" y="38" fill="#43526A">Ada  36  London</text>
+    <text x="20" y="72" fill="#43526A">Alan 41  Leeds</text>
+    <text x="20" y="106" fill="#43526A">Zoe  29  Bath</text>
+
+    <text x="336" y="72" font-size="40" fill="#1F6FEB">&#8594;</text>
+
+    <g transform="translate(410,0)">
+      <rect x="0" y="0" width="320" height="120" rx="8" fill="#FFFFFF" stroke="#12A150" stroke-width="1.5"/>
+      <line x1="0" y1="40" x2="320" y2="40" stroke="#DDE6F0"/>
+      <line x1="0" y1="80" x2="320" y2="80" stroke="#DDE6F0"/>
+      <line x1="150" y1="0" x2="150" y2="120" stroke="#DDE6F0"/>
+      <line x1="235" y1="0" x2="235" y2="120" stroke="#DDE6F0"/>
+      <text x="16" y="28" fill="#0E1B2A">Ada</text><text x="166" y="28" fill="#0E1B2A">36</text><text x="250" y="28" fill="#0E1B2A">London</text>
+      <text x="16" y="68" fill="#0E1B2A">Alan</text><text x="166" y="68" fill="#0E1B2A">41</text><text x="250" y="68" fill="#0E1B2A">Leeds</text>
+      <text x="16" y="108" fill="#0E1B2A">Zoe</text><text x="166" y="108" fill="#0E1B2A">29</text><text x="250" y="108" fill="#0E1B2A">Bath</text>
+    </g>
+  </g>
+
+  <!-- url tag -->
+  <text x="1120" y="588" text-anchor="end" font-family="'JetBrains Mono','DejaVu Sans Mono',monospace" font-size="26" font-weight="700" fill="#0B4FC0">txttocsv.com</text>
+</svg>

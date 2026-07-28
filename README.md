@@ -38,7 +38,7 @@ The flagship pillar is written: `how-to-convert-txt-to-csv`. It links to the pag
 | 7 | tab-delimited-txt-to-csv | tab delimited txt to csv | ~90 | mid | delimiter (69 kw) |
 | 8 | batch-convert-txt-to-csv | batch convert txt to csv | ~70 | mid | batch (41 kw) |
 | 9 | txt-to-csv-google-sheets | txt to csv google sheets | ~40 | low | Sheets (3 kw) |
-| 10 | fix-csv-opening-one-column-excel | csv opens in one column | mid | mid | Excel error | 
+| 10 | fix-csv-opening-one-column-excel | csv opens in one column | mid | mid | Excel error |
 
 Each new post: create `src/content/blog/<slug>.md` using the flagship's frontmatter shape (metaTitle 40-65, description 100-165, faq, related). Add it to the related-links of siblings so internal linking stays dense (4-6 links per post).
 

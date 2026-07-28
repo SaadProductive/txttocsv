@@ -6,7 +6,7 @@ keyword: "convert txt to csv excel"
 intent: "Informational"
 published: "2026-07-28"
 updated: "2026-07-28"
-author: "Hamza Younis"
+author: "Saad Zaman"
 faq:
   - q: "Why does Excel turn my long numbers into scientific notation?"
     a: "Excel auto-detects any long run of digits as a number and displays it as scientific notation once it passes 15 digits. Account numbers, phone numbers and IDs are the usual victims. The fix is to set that column to Text during import instead of letting Excel guess the type."

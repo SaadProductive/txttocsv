@@ -1,16 +1,16 @@
 ---
 import Base from '../layouts/Base.astro';
 const site = 'https://txttocsv.com';
-// TODO before launch: replace author name, bio and sameAs profiles with real details.
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'AboutPage',
   mainEntity: {
     '@type': 'Person',
-    name: 'Hamza Younis',
+    name: 'Saad Zaman',
     url: `${site}/about`,
+    image: `${site}/saad-zaman.webp`,
     email: 'info@txttocsv.com',
-    sameAs: [], // add real X / LinkedIn / GitHub URLs
+    sameAs: ['https://x.com/saad7038'],
   },
 };
 ---
@@ -34,12 +34,18 @@ const schema = {
     </p>
 
     <h2>Who builds it</h2>
+    <div class="byline" style="margin-bottom:1rem">
+      <img src="/saad-zaman.webp" alt="Saad Zaman" width="64" height="64" style="width:64px;height:64px" />
+      <div>
+        <strong>Saad Zaman</strong><br />
+        <a href="https://x.com/saad7038" rel="me noopener" target="_blank">@saad7038 on X</a>
+      </div>
+    </div>
     <p>
-      This site is built and maintained by Hamza Younis, a developer who works with data exports and
+      This site is built and maintained by Saad Zaman, a developer who works with data exports and
       import pipelines. The converter and every guide on the site come from hands-on use of these
-      formats, not from rewritten documentation.
-      <em>(Replace this paragraph with your real name, background and a photo before launch. Add your
-      X, LinkedIn or GitHub links to the author schema so search engines can verify authorship.)</em>
+      formats and the everyday problems they cause, not from rewritten documentation. When a guide
+      says a method drops leading zeros or garbles encoding, it is because that happened on a real file.
     </p>
 
     <h2>How we keep it accurate</h2>

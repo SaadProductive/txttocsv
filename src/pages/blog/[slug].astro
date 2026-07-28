@@ -17,8 +17,8 @@ const person = {
   '@type': 'Person',
   name: d.author,
   url: `${site}/about`,
-  // TODO: replace with the real author's public profiles before launch.
-  sameAs: [],
+  image: `${site}/saad-zaman.webp`,
+  sameAs: ['https://x.com/saad7038'],
 };
 
 const schema = [
@@ -72,7 +72,10 @@ const fmt = (s: string) =>
     <p class="eyebrow">{d.intent} guide</p>
     <h1>{d.title}</h1>
     <div class="meta">
-      <span class="byline">By {d.author}</span>
+      <span class="byline">
+        <img src="/saad-zaman.webp" alt={d.author} width="36" height="36" />
+        By <a href="/about" rel="author">{d.author}</a>
+      </span>
       <span>Updated on {fmt(d.updated)}</span>
     </div>
 

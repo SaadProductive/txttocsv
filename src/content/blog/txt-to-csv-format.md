@@ -6,7 +6,7 @@ keyword: "txt to csv format"
 intent: "Informational"
 published: "2026-07-28"
 updated: "2026-07-28"
-author: "Hamza Younis"
+author: "Saad Zaman"
 faq:
   - q: "What is the difference between TXT and CSV format?"
     a: "TXT is unstructured text with no rules about columns. CSV is a structured format where each line is a row and a chosen character, usually a comma, separates the columns, with specific rules for quoting values that contain that character."
